@@ -5,6 +5,8 @@ const clientPromise = require("../lib/mongo");
 const app = express();
 app.use(express.json());
 
+console.log("🚀 Express server loaded on Vercel");
+
 app.get("/api/hello", (req, res) => {
   res.json({ message: "Hello from Express on Vercel!" });
 });
