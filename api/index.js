@@ -5,17 +5,18 @@ const clientPromise = require("../lib/mongo");
 const app = express();
 app.use(express.json());
 
-app.get('/api/hello', (req, res) => {
-  res.json({ message: 'Hello from Express on Vercel!' });
+// Test Route
+app.get("/hello", (req, res) => {
+  res.json({ message: "Hello from Express on Vercel!" });
 });
 
-app.post('/api/echo', (req, res) => {
+// Echo Route
+app.post("/echo", (req, res) => {
   res.json({ received: req.body });
 });
 
-
 // Add task
-app.post("/api/tasks/add", async (req, res) => {
+app.post("/tasks/add", async (req, res) => {
   try {
     const client = await clientPromise;
     const db = client.db("todolist");
@@ -24,7 +25,9 @@ app.post("/api/tasks/add", async (req, res) => {
     const task = req.body;
 
     if (!task || !task.id || !task.title || !task.userId) {
-      return res.status(400).json({ error: "Invalid task format or missing userId" });
+      return res
+        .status(400)
+        .json({ error: "Invalid task format or missing userId" });
     }
 
     await tasks.insertOne(task);
@@ -36,7 +39,7 @@ app.post("/api/tasks/add", async (req, res) => {
 });
 
 // Get all tasks
-app.get("/api/tasks", async (req, res) => {
+app.get("/tasks", async (req, res) => {
   try {
     const client = await clientPromise;
     const db = client.db("todolist");
@@ -51,7 +54,7 @@ app.get("/api/tasks", async (req, res) => {
 });
 
 // Get single task by ID
-app.get("/api/tasks/:id", async (req, res) => {
+app.get("/tasks/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const client = await clientPromise;
@@ -72,8 +75,8 @@ app.get("/api/tasks/:id", async (req, res) => {
 });
 
 // Update task
-app.put("/api/tasks/update", async (req, res) => {
-  console.log("[PUT /api/tasks/update] Start");
+app.put("/tasks/update", async (req, res) => {
+  console.log("[PUT /tasks/update] Start");
   const start = Date.now();
 
   try {
@@ -90,21 +93,23 @@ app.put("/api/tasks/update", async (req, res) => {
     );
 
     const end = Date.now();
-    console.log("[PUT /api/tasks/update] Completed in", end - start, "ms");
+    console.log("[PUT /tasks/update] Completed in", end - start, "ms");
 
     if (result.modifiedCount === 0) {
-      return res.status(404).json({ error: "Task not found or already updated" });
+      return res
+        .status(404)
+        .json({ error: "Task not found or already updated" });
     }
 
     res.status(200).json({ message: "Task updated" });
   } catch (e) {
-    console.error("[PUT /api/tasks/update] Error:", e);
+    console.error("[PUT /tasks/update] Error:", e);
     res.status(500).json({ error: "Failed to update task" });
   }
 });
 
 // Delete task
-app.delete("/api/tasks/delete/:id", async (req, res) => {
+app.delete("/tasks/delete/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const client = await clientPromise;
@@ -125,7 +130,7 @@ app.delete("/api/tasks/delete/:id", async (req, res) => {
 });
 
 // Reset all tasks
-app.post("/api/tasks/reset", async (req, res) => {
+app.post("/tasks/reset", async (req, res) => {
   try {
     const client = await clientPromise;
     const db = client.db("todolist");
