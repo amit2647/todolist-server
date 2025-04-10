@@ -5,14 +5,13 @@ const clientPromise = require("../lib/mongo");
 const app = express();
 app.use(express.json());
 
-app.get('/api/hello', (req, res) => {
-  res.json({ message: 'Hello from Express on Vercel!' });
+app.get("/api/hello", (req, res) => {
+  res.json({ message: "Hello from Express on Vercel!" });
 });
 
-app.post('/api/echo', (req, res) => {
+app.post("/api/echo", (req, res) => {
   res.json({ received: req.body });
 });
-
 
 // Add task
 app.post("/api/tasks/add", async (req, res) => {
@@ -24,7 +23,9 @@ app.post("/api/tasks/add", async (req, res) => {
     const task = req.body;
 
     if (!task || !task.id || !task.title || !task.userId) {
-      return res.status(400).json({ error: "Invalid task format or missing userId" });
+      return res
+        .status(400)
+        .json({ error: "Invalid task format or missing userId" });
     }
 
     await tasks.insertOne(task);
@@ -50,7 +51,7 @@ app.get("/api/tasks", async (req, res) => {
   }
 });
 
-// Get single task by ID
+// Get single task by ID 1744202965927
 app.get("/api/tasks/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -93,7 +94,9 @@ app.put("/api/tasks/update", async (req, res) => {
     console.log("[PUT /api/tasks/update] Completed in", end - start, "ms");
 
     if (result.modifiedCount === 0) {
-      return res.status(404).json({ error: "Task not found or already updated" });
+      return res
+        .status(404)
+        .json({ error: "Task not found or already updated" });
     }
 
     res.status(200).json({ message: "Task updated" });
@@ -137,6 +140,10 @@ app.post("/api/tasks/reset", async (req, res) => {
     console.error("Reset tasks error:", e);
     res.status(500).json({ error: "Failed to clear tasks" });
   }
+});
+
+app.get("/api/ping", (req, res) => {
+  res.status(200).json({ message: "pong" });
 });
 
 module.exports = app;
